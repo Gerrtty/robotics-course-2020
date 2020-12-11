@@ -16,16 +16,53 @@ def get_transformation_matrix(alpha, a, d, theta):
     ])
 
 
+# get transformation matrix
+# return Rotation matrix and Position vector
+def transform_homogenous(T):
+    return T[:3, :3], T[3, :3]
+
+
+def matrix_multiplication(arr_matrix):
+    answer = arr_matrix[0]
+
+    for matrix in arr_matrix:
+        answer = answer.dot(matrix)
+
+    return answer
+
+
 if __name__ == "__main__":
-    var('l1 l2 d2 l3 theta3')
+    var('theta1 theta2 l2 d3 theta2d theta1d d3 d3d')
 
-    print(cos(pi*(1/2)))
-
-    T01 = get_transformation_matrix(0, l1, 0, 0)
-    T12 = get_transformation_matrix(pi/2, l2, d2, 0)
-    T23 = get_transformation_matrix(0, l3, 0, theta3)
-    T3ee = get_transformation_matrix(0, 50, 0, 0)
+    T01 = get_transformation_matrix(0, 0, 0, theta1)
+    T12 = get_transformation_matrix(pi/2, l2, 0, theta2)
+    T23 = get_transformation_matrix(0, 0, d3, 0)
 
     print(T01)
     print()
+    R, P = transform_homogenous(T01)
+    print(R)
+    print()
+    print(P)
+
+    print()
     print(T12)
+    print()
+    print(T23)
+    print()
+
+    R = np.array([
+        [cos(theta2), -sin(theta2), 0],
+        [0, 0, -1],
+        [sin(theta2), cos(theta2), 0]
+    ]).dot(np.array([0, 0, theta2d]))
+
+    R03 = np.array([
+        [cos(theta1), -sin(theta1), 0],
+        [sin(theta1), cos(theta1), 0],
+        [0, 0, 1]
+    ]).dot(np.array([
+        [cos(theta2), -sin(theta2), 0],
+        [0, 0, -1],
+        [sin(theta2), cos(theta2), 0]
+    ]))
